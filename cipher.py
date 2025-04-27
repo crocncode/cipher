@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.write('hey there')
+st.title("Welcome to Daniel's Cipher Passion Project")
 
 def caesar_cipher(text, shift, mode='Encrypt'):
     """Encrypt or decrypt using Caesar cipher."""
@@ -16,14 +16,13 @@ def caesar_cipher(text, shift, mode='Encrypt'):
 
 def vigenere_cipher(text, key, mode='encrypt'):
     """Encrypt or decrypt using Vigenere cipher."""
-    key = key.lower()
     result = ''
     key_index = 0
     
     for char in text:
         if char.isalpha():
             shift = ord(key[key_index % len(key)]) - ord('a')
-            shift = shift if mode == 'encrypt' else -shift
+            shift = shift if mode == 'Encrypt' else -shift
             base = ord('A') if char.isupper() else ord('a')
             result += chr((ord(char) - base + shift) % 26 + base)
             key_index += 1
@@ -45,18 +44,13 @@ if cipher_type == "Caesar":
     if shift == 0:
         st.warning('A number of 0 does not provide a good encryption')
     result = caesar_cipher(user_message, shift, encrypt_mode)
-    st.header("Your encrypted message is")
-    st.subheader(result)
 else:
-    
-    result = "Invalid cipher choice. Please choose 'Caesar' or 'Vigenere'."
+    key = st.text_input("Enter an encryption key (letters only)",'password')
 
-# def get_user_input():
-#     """Handle user input for cipher selection and mode."""
-#     cipher_type = input("Choose cipher ('Caesar' or 'Vigenere'): ").strip().lower()
-#     mode = input("Would you like to 'encrypt' or 'decrypt'? ").strip().lower()
-#     message = input("Enter your message: ")
+    if not key.isalpha():
+        st.error("Invalid encryption key. Please enter alphabetic characters only.")
+        st.stop()
+    result = vigenere_cipher(user_message, key, encrypt_mode)
 
-    
-
-#     print(f"Your {cipher_type} {mode}ed message: {result}")
+st.header("Your encrypted message is")
+st.subheader(result)      
